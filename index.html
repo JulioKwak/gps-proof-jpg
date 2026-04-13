@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GPS Proof JPG</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div>
+        <h1>GPS Proof JPG</h1>
+        <p class="subtitle">지도 포함 위치 증빙 JPG 생성 · PNG/JPG 변환</p>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="panel">
+        <div class="tabs">
+          <button class="tab active" data-tab="proofTab">위치 증빙 JPG</button>
+          <button class="tab" data-tab="convertTab">PNG/JPG 변환</button>
+        </div>
+
+        <div id="proofTab" class="tab-pane active">
+          <div class="card">
+            <h2>1. 위치 선택</h2>
+
+            <div class="button-row">
+              <button id="btnLoadMap" class="primary">지도 불러오기</button>
+              <button id="btnGetGps">현재 GPS 불러오기</button>
+              <button id="btnResetLocation" class="ghost">위치 초기화</button>
+            </div>
+
+            <p class="hint">
+              지도 클릭 또는 현재 GPS로 위치를 선택하세요.
+            </p>
+
+            <div id="map" class="map-box">
+              <div class="map-placeholder">
+                <strong>지도를 아직 불러오지 않았습니다.</strong>
+                <span>먼저 "지도 불러오기"를 눌러주세요.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>2. 위치 정보</h2>
+
+            <div class="info-grid">
+              <label>
+                <span>선택 방식</span>
+                <input id="sourceType" type="text" readonly value="미선택" />
+              </label>
+              <label>
+                <span>위도</span>
+                <input id="latInput" type="text" readonly />
+              </label>
+              <label>
+                <span>경도</span>
+                <input id="lngInput" type="text" readonly />
+              </label>
+              <label>
+                <span>정확도(m)</span>
+                <input id="accuracyInput" type="text" readonly />
+              </label>
+              <label>
+                <span>측정 시각</span>
+                <input id="timeInput" type="text" readonly />
+              </label>
+              <label>
+                <span>비고</span>
+                <input id="memoInput" type="text" placeholder="예: 옥상 점검 위치" />
+              </label>
+            </div>
+
+            <div class="button-row">
+              <button id="btnPreviewCard" class="primary">미리보기 생성</button>
+              <button id="btnSaveJpg">JPG 저장</button>
+              <button id="btnShareJpg">공유</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>3. 미리보기</h2>
+            <div class="preview-wrap">
+              <canvas id="resultCanvas" width="1080" height="1350"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div id="convertTab" class="tab-pane">
+          <div class="card">
+            <h2>PNG/JPG 변환</h2>
+
+            <div class="info-grid">
+              <label class="file-label">
+                <span>사진 선택</span>
+                <input id="imageFileInput" type="file" accept="image/png,image/jpeg,image/jpg" />
+              </label>
+              <label>
+                <span>출력 형식</span>
+                <select id="outputFormat">
+                  <option value="image/jpeg">JPG</option>
+                  <option value="image/png">PNG</option>
+                </select>
+              </label>
+              <label>
+                <span>JPG 품질</span>
+                <input id="jpgQuality" type="range" min="0.6" max="1" step="0.05" value="0.92" />
+              </label>
+              <label>
+                <span>품질 값</span>
+                <input id="jpgQualityText" type="text" readonly value="0.92" />
+              </label>
+            </div>
+
+            <div class="button-row">
+              <button id="btnConvertImage" class="primary">변환하기</button>
+              <button id="btnDownloadConverted">변환 파일 저장</button>
+              <button id="btnShareConverted">공유</button>
+            </div>
+
+            <div class="convert-preview">
+              <div>
+                <h3>원본</h3>
+                <img id="sourcePreview" alt="원본 미리보기" />
+              </div>
+              <div>
+                <h3>변환 결과</h3>
+                <img id="convertedPreview" alt="변환 결과 미리보기" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="statusBox" class="status">준비되었습니다.</div>
+      </section>
+    </main>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
