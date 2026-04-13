@@ -34,6 +34,17 @@ const els = {
   btnShareConverted: document.getElementById("btnShareConverted"),
   sourcePreview: document.getElementById("sourcePreview"),
   convertedPreview: document.getElementById("convertedPreview"),
+
+  statusBox: document.getElementById("statusBox"),
+  statusBadge: document.getElementById("statusBadge"),
+  statusText: document.getElementById("statusText"),
+
+  appModalBackdrop: document.getElementById("appModalBackdrop"),
+  appModal: document.getElementById("appModal"),
+  appModalBadge: document.getElementById("appModalBadge"),
+  appModalTitle: document.getElementById("appModalTitle"),
+  appModalMessage: document.getElementById("appModalMessage"),
+  appModalConfirmBtn: document.getElementById("appModalConfirmBtn"),
 };
 
 init();
@@ -41,6 +52,7 @@ init();
 function init() {
   bindTabs();
   bindEvents();
+  initModal();
   updateStatus("지도를 불러오는 중입니다...");
   syncQualityText();
   drawInitialCanvas();
@@ -71,12 +83,82 @@ function bindEvents() {
   els.btnShareConverted.addEventListener("click", shareConvertedFile);
 }
 
+function initModal() {
+  window.alert = function (message) {
+    openModal({
+      title: "안내",
+      message: String(message || ""),
+      badge: "알림",
+    });
+  };
+}
+
+function openModal({ title = "안내", message = "", badge = "알림" } = {}) {
+  const backdrop = els.appModalBackdrop;
+  const modal = els.appModal;
+
+  els.appModalBadge.textContent = badge;
+  els.appModalTitle.textContent = title;
+  els.appModalMessage.innerHTML = String(message).replace(/\n/g, "<br>");
+
+  backdrop.hidden = false;
+  requestAnimationFrame(() => {
+    backdrop.classList.add("show");
+    modal.classList.add("show");
+  });
+
+  function close() {
+    backdrop.classList.remove("show");
+    modal.classList.remove("show");
+    setTimeout(() => {
+      backdrop.hidden = true;
+    }, 180);
+
+    els.appModalConfirmBtn.removeEventListener("click", close);
+    backdrop.removeEventListener("click", onBackdropClick);
+    document.removeEventListener("keydown", onKeyDown);
+  }
+
+  function onBackdropClick(e) {
+    if (e.target === backdrop) close();
+  }
+
+  function onKeyDown(e) {
+    if (e.key === "Escape") close();
+  }
+
+  els.appModalConfirmBtn.addEventListener("click", close);
+  backdrop.addEventListener("click", onBackdropClick);
+  document.addEventListener("keydown", onKeyDown);
+}
+
 function syncQualityText() {
   els.jpgQualityText.value = els.jpgQuality.value;
 }
 
 function updateStatus(message, isError = false) {
-//
+  if (!els.statusBox || !els.statusText || !els.statusBadge) return;
+
+  els.statusText.textContent = message || "";
+
+  els.statusBox.classList.remove("is-error", "is-success", "is-warning");
+
+  if (isError) {
+    els.statusBox.classList.add("is-error");
+    els.statusBadge.textContent = "오류";
+    return;
+  }
+
+  const text = String(message || "");
+  if (text.includes("완료") || text.includes("생성되었습니다") || text.includes("저장") || text.includes("공유")) {
+    els.statusBox.classList.add("is-success");
+    els.statusBadge.textContent = "완료";
+  } else if (text.includes("불러오는 중") || text.includes("생성 중") || text.includes("변환 중") || text.includes("로드")) {
+    els.statusBox.classList.add("is-warning");
+    els.statusBadge.textContent = "진행";
+  } else {
+    els.statusBadge.textContent = "안내";
+  }
 }
 
 async function loadMapSdkAndInit() {
@@ -113,6 +195,7 @@ async function loadMapSdkAndInit() {
   } catch (error) {
     console.error(error);
     updateStatus(error.message || "지도 로드 중 오류가 발생했습니다.", true);
+    alert(error.message || "지도 로드 중 오류가 발생했습니다.");
   }
 }
 
@@ -120,8 +203,12 @@ function loadScript(src) {
   return new Promise((resolve, reject) => {
     const existing = document.querySelector(`script[src="${src}"]`);
     if (existing) {
-      existing.addEventListener("load", resolve);
-      existing.addEventListener("error", reject);
+      if (window.naver && window.naver.maps) {
+        resolve();
+        return;
+      }
+      existing.addEventListener("load", resolve, { once: true });
+      existing.addEventListener("error", () => reject(new Error("스크립트 로드 실패")), { once: true });
       return;
     }
 
@@ -182,6 +269,7 @@ function setSelectedLocation({ lat, lng, accuracy, sourceType }) {
 function getCurrentGps() {
   if (!navigator.geolocation) {
     updateStatus("이 기기에서는 위치 기능을 지원하지 않습니다.", true);
+    alert("이 기기에서는 위치 기능을 지원하지 않습니다.");
     return;
   }
 
@@ -203,6 +291,7 @@ function getCurrentGps() {
       if (error.code === 2) message = "위치 정보를 사용할 수 없습니다.";
       if (error.code === 3) message = "위치 요청 시간이 초과되었습니다.";
       updateStatus(message, true);
+      alert(message);
     },
     {
       enableHighAccuracy: true,
@@ -274,6 +363,7 @@ async function generateProofPreview() {
   } catch (error) {
     console.error(error);
     updateStatus(error.message || "미리보기 생성 중 오류가 발생했습니다.", true);
+    alert(error.message || "미리보기 생성 중 오류가 발생했습니다.");
   }
 }
 
@@ -297,11 +387,9 @@ function buildStaticMapUrl(lng, lat) {
 function drawProofCanvas(ctx, canvas, data) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // 배경
   ctx.fillStyle = "#f8fafc";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // 헤더
   roundRect(ctx, 40, 30, canvas.width - 80, 110, 28, "#ffffff");
   ctx.fillStyle = "#0f172a";
   ctx.font = "bold 42px sans-serif";
@@ -310,10 +398,8 @@ function drawProofCanvas(ctx, canvas, data) {
   ctx.font = "26px sans-serif";
   ctx.fillText("GPS Proof JPG", 80, 126);
 
-  // 지도
   roundImage(ctx, data.mapImage, 40, 165, canvas.width - 80, 720, 32);
 
-  // 정보 카드
   roundRect(ctx, 40, 920, canvas.width - 80, 390, 28, "#ffffff");
 
   ctx.fillStyle = "#0f172a";
@@ -340,11 +426,6 @@ function drawProofCanvas(ctx, canvas, data) {
     wrapText(ctx, value, 300, y, 700, 32);
     y += 50;
   });
-
-  // 하단 라벨
-  //ctx.fillStyle = "#94a3b8";
-  //ctx.font = "20px sans-serif";
-  //ctx.fillText("Generated by gps-proof-jpg", 76, 1270);
 }
 
 async function saveProofJpg() {
@@ -360,6 +441,7 @@ async function saveProofJpg() {
   } catch (error) {
     console.error(error);
     updateStatus(error.message || "JPG 저장 중 오류가 발생했습니다.", true);
+    alert(error.message || "JPG 저장 중 오류가 발생했습니다.");
   }
 }
 
@@ -394,6 +476,7 @@ async function shareProofJpg() {
       return;
     }
     updateStatus(error.message || "공유 중 오류가 발생했습니다.", true);
+    alert(error.message || "공유 중 오류가 발생했습니다.");
   }
 }
 
@@ -416,7 +499,6 @@ async function convertImageFile() {
     canvas.width = img.naturalWidth;
     canvas.height = img.naturalHeight;
 
-    // JPG 변환 시 흰 배경 깔기
     if (els.outputFormat.value === "image/jpeg") {
       ctx.fillStyle = "#ffffff";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -438,6 +520,7 @@ async function convertImageFile() {
   } catch (error) {
     console.error(error);
     updateStatus(error.message || "이미지 변환 중 오류가 발생했습니다.", true);
+    alert(error.message || "이미지 변환 중 오류가 발생했습니다.");
   }
 }
 
@@ -453,6 +536,7 @@ function downloadConvertedFile() {
   } catch (error) {
     console.error(error);
     updateStatus(error.message || "파일 저장 중 오류가 발생했습니다.", true);
+    alert(error.message || "파일 저장 중 오류가 발생했습니다.");
   }
 }
 
@@ -486,6 +570,7 @@ async function shareConvertedFile() {
       return;
     }
     updateStatus(error.message || "공유 중 오류가 발생했습니다.", true);
+    alert(error.message || "공유 중 오류가 발생했습니다.");
   }
 }
 
