@@ -8,10 +8,14 @@
 </head>
 <body>
   <div class="app">
-    <header class="topbar">
-      <div>
-        <h1>GPS Proof JPG</h1>
-        <p class="subtitle">지도 포함 위치 증빙 JPG 생성 · PNG/JPG 변환</p>
+    <header class="app-header">
+      <div class="app-brand">
+        <img src="/logo.png" alt="RAPA 로고" class="app-logo" />
+        <div class="brand-text">
+          <div class="app-eyebrow">RAPA Smart Field</div>
+          <h1>GPS Proof JPG</h1>
+          <p class="subtitle">지도 포함 위치 증빙 JPG 생성 · PNG/JPG 변환</p>
+        </div>
       </div>
     </header>
 
@@ -22,13 +26,21 @@
           <button class="tab" data-tab="convertTab">PNG/JPG 변환</button>
         </div>
 
+        <div id="statusBox" class="status-box">
+          <div class="status-badge" id="statusBadge">안내</div>
+          <div class="status-text" id="statusText">지도를 불러오는 중입니다...</div>
+        </div>
+
         <div id="proofTab" class="tab-pane active">
           <div class="card">
-            <h2>1. 위치 선택</h2>
+            <div class="card-head">
+              <h2>1. 위치 선택</h2>
+              <span class="card-chip">지도 · GPS</span>
+            </div>
 
             <div class="button-row">
-              <button id="btnGetGps">현재 GPS 불러오기</button>
-              <button id="btnResetLocation" class="ghost">위치 초기화</button>
+              <button id="btnGetGps" class="btn btn-primary">현재 GPS 불러오기</button>
+              <button id="btnResetLocation" class="btn btn-secondary">위치 초기화</button>
             </div>
 
             <p class="hint">
@@ -38,13 +50,16 @@
             <div id="map" class="map-box">
               <div class="map-placeholder">
                 <strong>지도를 아직 불러오지 않았습니다.</strong>
-                <span>먼저 "지도 불러오기"를 눌러주세요.</span>
+                <span>잠시 후 자동으로 로드됩니다.</span>
               </div>
             </div>
           </div>
 
           <div class="card">
-            <h2>2. 위치 정보</h2>
+            <div class="card-head">
+              <h2>2. 위치 정보</h2>
+              <span class="card-chip">좌표 정보</span>
+            </div>
 
             <div class="info-grid">
               <label>
@@ -74,14 +89,18 @@
             </div>
 
             <div class="button-row">
-              <button id="btnPreviewCard" class="primary">미리보기 생성</button>
-              <button id="btnSaveJpg">JPG 저장</button>
-              <button id="btnShareJpg">공유</button>
+              <button id="btnPreviewCard" class="btn btn-primary">미리보기 생성</button>
+              <button id="btnSaveJpg" class="btn btn-secondary">JPG 저장</button>
+              <button id="btnShareJpg" class="btn btn-secondary">공유</button>
             </div>
           </div>
 
           <div class="card">
-            <h2>3. 미리보기</h2>
+            <div class="card-head">
+              <h2>3. 미리보기</h2>
+              <span class="card-chip">1080 × 1350</span>
+            </div>
+
             <div class="preview-wrap">
               <canvas id="resultCanvas" width="1080" height="1350"></canvas>
             </div>
@@ -90,7 +109,10 @@
 
         <div id="convertTab" class="tab-pane">
           <div class="card">
-            <h2>PNG/JPG 변환</h2>
+            <div class="card-head">
+              <h2>PNG/JPG 변환</h2>
+              <span class="card-chip">이미지 변환</span>
+            </div>
 
             <div class="info-grid">
               <label class="file-label">
@@ -115,26 +137,38 @@
             </div>
 
             <div class="button-row">
-              <button id="btnConvertImage" class="primary">변환하기</button>
-              <button id="btnDownloadConverted">변환 파일 저장</button>
-              <button id="btnShareConverted">공유</button>
+              <button id="btnConvertImage" class="btn btn-primary">변환하기</button>
+              <button id="btnDownloadConverted" class="btn btn-secondary">변환 파일 저장</button>
+              <button id="btnShareConverted" class="btn btn-secondary">공유</button>
             </div>
 
             <div class="convert-preview">
-              <div>
+              <div class="preview-card">
                 <h3>원본</h3>
                 <img id="sourcePreview" alt="원본 미리보기" />
               </div>
-              <div>
+              <div class="preview-card">
                 <h3>변환 결과</h3>
                 <img id="convertedPreview" alt="변환 결과 미리보기" />
               </div>
             </div>
           </div>
         </div>
-
       </section>
     </main>
+  </div>
+
+  <div class="modal-backdrop" id="appModalBackdrop" hidden>
+    <div class="app-modal" id="appModal" role="dialog" aria-modal="true" aria-labelledby="appModalTitle">
+      <div class="app-modal-header">
+        <div class="app-modal-badge" id="appModalBadge">알림</div>
+        <h3 id="appModalTitle">안내</h3>
+      </div>
+      <div class="app-modal-body" id="appModalMessage"></div>
+      <div class="app-modal-actions">
+        <button type="button" class="btn btn-primary" id="appModalConfirmBtn">확인</button>
+      </div>
+    </div>
   </div>
 
   <script src="./app.js"></script>
