@@ -536,6 +536,25 @@ input[type="range"] {
   gap: 10px;
 }
 
+.copy-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.copy-field input {
+  flex: 1;
+  min-width: 0;
+}
+
+.btn-copy {
+  flex: 0 0 auto;
+  min-width: 72px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  white-space: nowrap;
+}
+
 /* responsive */
 @media (max-width: 768px) {
   .app {
@@ -594,5 +613,10 @@ input[type="range"] {
     max-width: none;
     border-radius: 22px 22px 18px 18px;
     align-self: end;
+  }
+
+  .btn-copy {
+    min-width: 64px;
+    padding: 11px 12px;
   }
 }
