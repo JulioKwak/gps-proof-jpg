@@ -44,9 +44,10 @@ init();
 function init() {
   bindTabs();
   bindEvents();
-  updateStatus("준비되었습니다.");
+  updateStatus("지도를 불러오는 중입니다...");
   syncQualityText();
   drawInitialCanvas();
+  loadMapSdkAndInit();
 }
 
 function bindTabs() {
