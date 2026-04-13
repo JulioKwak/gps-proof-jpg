@@ -12,14 +12,12 @@ const els = {
   panes: document.querySelectorAll(".tab-pane"),
   statusBox: document.getElementById("statusBox"),
 
-  btnLoadMap: document.getElementById("btnLoadMap"),
   btnGetGps: document.getElementById("btnGetGps"),
   btnResetLocation: document.getElementById("btnResetLocation"),
   btnPreviewCard: document.getElementById("btnPreviewCard"),
   btnSaveJpg: document.getElementById("btnSaveJpg"),
   btnShareJpg: document.getElementById("btnShareJpg"),
 
-  sourceType: document.getElementById("sourceType"),
   latInput: document.getElementById("latInput"),
   lngInput: document.getElementById("lngInput"),
   accuracyInput: document.getElementById("accuracyInput"),
@@ -62,7 +60,6 @@ function bindTabs() {
 }
 
 function bindEvents() {
-  els.btnLoadMap.addEventListener("click", loadMapSdkAndInit);
   els.btnGetGps.addEventListener("click", getCurrentGps);
   els.btnResetLocation.addEventListener("click", resetLocation);
   els.btnPreviewCard.addEventListener("click", generateProofPreview);
