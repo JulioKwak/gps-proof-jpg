@@ -281,14 +281,14 @@ button:active {
 
 .btn-primary,
 button.primary {
-  background: linear-gradient(135deg, var(--primary) 0%, #6d5efc 100%);
-  color: #fff;
-  box-shadow: 0 12px 24px rgba(79,70,229,0.18);
+  background: linear-gradient(135deg, var(--primary) 0%, #6d5efc 100%) !important;
+  color: #ffffff !important;
 }
 
 .btn-primary:hover,
 button.primary:hover {
-  background: linear-gradient(135deg, var(--primary-dark) 0%, #5d4ef4 100%);
+  background: linear-gradient(135deg, var(--primary-dark) 0%, #5d4ef4 100%) !important;
+  color: #ffffff !important;
 }
 
 .btn-secondary,
