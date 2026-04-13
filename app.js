@@ -10,7 +10,6 @@ let naverClientId = null;
 const els = {
   tabs: document.querySelectorAll(".tab"),
   panes: document.querySelectorAll(".tab-pane"),
-  statusBox: document.getElementById("statusBox"),
 
   btnGetGps: document.getElementById("btnGetGps"),
   btnResetLocation: document.getElementById("btnResetLocation"),
@@ -77,8 +76,7 @@ function syncQualityText() {
 }
 
 function updateStatus(message, isError = false) {
-  els.statusBox.textContent = message;
-  els.statusBox.style.color = isError ? "#b91c1c" : "#475569";
+//
 }
 
 async function loadMapSdkAndInit() {
