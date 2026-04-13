@@ -68,11 +68,18 @@
               </label>
               <label>
                 <span>위도</span>
-                <input id="latInput" type="text" readonly />
+                <div class="copy-field">
+                  <input id="latInput" type="text" readonly />
+                  <button type="button" id="btnCopyLat" class="btn btn-copy">복사</button>
+                </div>
               </label>
+              
               <label>
                 <span>경도</span>
-                <input id="lngInput" type="text" readonly />
+                <div class="copy-field">
+                  <input id="lngInput" type="text" readonly />
+                  <button type="button" id="btnCopyLng" class="btn btn-copy">복사</button>
+                </div>
               </label>
               <label>
                 <span>정확도(m)</span>
