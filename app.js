@@ -19,6 +19,8 @@ const els = {
 
   latInput: document.getElementById("latInput"),
   lngInput: document.getElementById("lngInput"),
+  btnCopyLat: document.getElementById("btnCopyLat"),
+  btnCopyLng: document.getElementById("btnCopyLng"),
   accuracyInput: document.getElementById("accuracyInput"),
   timeInput: document.getElementById("timeInput"),
   memoInput: document.getElementById("memoInput"),
@@ -77,6 +79,9 @@ function bindEvents() {
   els.btnSaveJpg.addEventListener("click", saveProofJpg);
   els.btnShareJpg.addEventListener("click", shareProofJpg);
 
+  els.btnCopyLat.addEventListener("click", () => copyTextValue(els.latInput, "위도"));
+  els.btnCopyLng.addEventListener("click", () => copyTextValue(els.lngInput, "경도"));
+  
   els.jpgQuality.addEventListener("input", syncQualityText);
   els.btnConvertImage.addEventListener("click", convertImageFile);
   els.btnDownloadConverted.addEventListener("click", downloadConvertedFile);
@@ -571,6 +576,33 @@ async function shareConvertedFile() {
     }
     updateStatus(error.message || "공유 중 오류가 발생했습니다.", true);
     alert(error.message || "공유 중 오류가 발생했습니다.");
+  }
+}
+
+async function copyTextValue(inputEl, label) {
+  const value = String(inputEl?.value || "").trim();
+
+  if (!value) {
+    alert(`${label} 값이 없습니다.`);
+    return;
+  }
+
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(value);
+    } else {
+      inputEl.removeAttribute("readonly");
+      inputEl.select();
+      inputEl.setSelectionRange(0, 99999);
+      document.execCommand("copy");
+      inputEl.setAttribute("readonly", true);
+    }
+
+    updateStatus(`${label}가 복사되었습니다.`);
+    alert(`${label}가 복사되었습니다.`);
+  } catch (error) {
+    console.error(error);
+    alert(`${label} 복사에 실패했습니다.`);
   }
 }
 
