@@ -164,7 +164,6 @@ function setSelectedLocation({ lat, lng, accuracy, sourceType }) {
   currentAccuracy = accuracy;
   currentSourceType = sourceType;
 
-  els.sourceType.value = sourceType;
   els.latInput.value = Number(lat).toFixed(6);
   els.lngInput.value = Number(lng).toFixed(6);
   els.accuracyInput.value = accuracy == null ? "-" : Number(accuracy).toFixed(1);
