@@ -218,7 +218,6 @@ function resetLocation() {
   currentSourceType = "미선택";
   currentBlob = null;
 
-  els.sourceType.value = "미선택";
   els.latInput.value = "";
   els.lngInput.value = "";
   els.accuracyInput.value = "";
