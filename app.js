@@ -17,6 +17,7 @@ const els = {
   btnSaveJpg: document.getElementById("btnSaveJpg"),
   btnShareJpg: document.getElementById("btnShareJpg"),
 
+  sourceType: document.getElementById("sourceType"),
   latInput: document.getElementById("latInput"),
   lngInput: document.getElementById("lngInput"),
   btnCopyLat: document.getElementById("btnCopyLat"),
