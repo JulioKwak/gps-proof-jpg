@@ -61,39 +61,53 @@
               <span class="card-chip">좌표 정보</span>
             </div>
 
-            <div class="info-grid">
-              <label>
-                <span>선택 방식</span>
-                <input id="sourceType" type="text" readonly value="미선택" />
-              </label>
-              <label>
-                <span>위도</span>
-                <div class="copy-field">
-                  <input id="latInput" type="text" readonly />
-                  <button type="button" id="btnCopyLat" class="btn btn-copy">복사</button>
-                </div>
-              </label>
-              
-              <label>
-                <span>경도</span>
-                <div class="copy-field">
-                  <input id="lngInput" type="text" readonly />
-                  <button type="button" id="btnCopyLng" class="btn btn-copy">복사</button>
-                </div>
-              </label>
-              <label>
-                <span>정확도(m)</span>
-                <input id="accuracyInput" type="text" readonly />
-              </label>
-              <label>
-                <span>측정 시각</span>
-                <input id="timeInput" type="text" readonly />
-              </label>
-              <label>
-                <span>비고</span>
-                <input id="memoInput" type="text" placeholder="예: 옥상 점검 위치" />
-              </label>
-            </div>
+          <div class="info-grid">
+            <label>
+              <span>선택 방식</span>
+              <input id="sourceType" type="text" readonly value="미선택" />
+            </label>
+          
+            <label>
+              <span>위도</span>
+              <div class="copy-field">
+                <input id="latInput" type="text" readonly />
+                <button type="button" id="btnCopyLat" class="btn btn-copy">복사</button>
+              </div>
+            </label>
+          
+            <label>
+              <span>정확도(m)</span>
+              <input id="accuracyInput" type="text" readonly />
+            </label>
+          
+            <label>
+              <span>경도</span>
+              <div class="copy-field">
+                <input id="lngInput" type="text" readonly />
+                <button type="button" id="btnCopyLng" class="btn btn-copy">복사</button>
+              </div>
+            </label>
+          
+            <label>
+              <span>지번주소</span>
+              <input id="jibunAddressInput" type="text" readonly />
+            </label>
+          
+            <label>
+              <span>도로명주소</span>
+              <input id="roadAddressInput" type="text" readonly />
+            </label>
+          
+            <label>
+              <span>측정 시각</span>
+              <input id="timeInput" type="text" readonly />
+            </label>
+          
+            <label>
+              <span>비고</span>
+              <input id="memoInput" type="text" placeholder="예: 옥상 점검 위치" />
+            </label>
+          </div>
 
             <div class="button-row">
               <button id="btnPreviewCard" class="btn btn-primary">미리보기 생성</button>
