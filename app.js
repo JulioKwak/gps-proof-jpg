@@ -22,6 +22,8 @@ const els = {
   btnCopyLat: document.getElementById("btnCopyLat"),
   btnCopyLng: document.getElementById("btnCopyLng"),
   accuracyInput: document.getElementById("accuracyInput"),
+  jibunAddressInput: document.getElementById("jibunAddressInput"),
+  roadAddressInput: document.getElementById("roadAddressInput"),
   timeInput: document.getElementById("timeInput"),
   memoInput: document.getElementById("memoInput"),
 
@@ -251,21 +253,34 @@ function initMap() {
   });
 }
 
-function setSelectedLocation({ lat, lng, accuracy, sourceType }) {
+async function setSelectedLocation({ lat, lng, accuracy, sourceType }) {
   currentPosition = { lat, lng };
   currentAccuracy = accuracy;
   currentSourceType = sourceType;
 
+  els.sourceType.value = sourceType;
   els.latInput.value = Number(lat).toFixed(6);
   els.lngInput.value = Number(lng).toFixed(6);
   els.accuracyInput.value = accuracy == null ? "-" : Number(accuracy).toFixed(1);
   els.timeInput.value = formatDateTime(new Date());
+  els.jibunAddressInput.value = "주소 조회 중...";
+  els.roadAddressInput.value = "주소 조회 중...";
 
   if (map && marker && window.naver && window.naver.maps) {
     const point = new naver.maps.LatLng(lat, lng);
     marker.setPosition(point);
     marker.setVisible(true);
     map.setCenter(point);
+  }
+
+  try {
+    const address = await reverseGeocode(lat, lng);
+    els.jibunAddressInput.value = address.jibun || "-";
+    els.roadAddressInput.value = address.road || "-";
+  } catch (error) {
+    console.error(error);
+    els.jibunAddressInput.value = "주소 조회 실패";
+    els.roadAddressInput.value = "주소 조회 실패";
   }
 
   updateStatus(`${sourceType} 위치가 선택되었습니다.`);
@@ -312,9 +327,12 @@ function resetLocation() {
   currentSourceType = "미선택";
   currentBlob = null;
 
+  els.sourceType.value = "미선택";
   els.latInput.value = "";
   els.lngInput.value = "";
   els.accuracyInput.value = "";
+  els.jibunAddressInput.value = "";
+  els.roadAddressInput.value = "";
   els.timeInput.value = "";
   els.memoInput.value = "";
 
@@ -359,6 +377,8 @@ async function generateProofPreview() {
       lng: currentPosition.lng,
       accuracy: currentAccuracy,
       sourceType: currentSourceType,
+      jibunAddress: els.jibunAddressInput.value,
+      roadAddress: els.roadAddressInput.value,
       timeText,
       memo,
     });
@@ -372,12 +392,29 @@ async function generateProofPreview() {
   }
 }
 
+async function reverseGeocode(lat, lng) {
+  const res = await fetch(`/api/reverse-geocode?lat=${encodeURIComponent(lat)}&lng=${encodeURIComponent(lng)}`);
+  if (!res.ok) {
+    throw new Error("주소 변환에 실패했습니다.");
+  }
+
+  const data = await res.json();
+  if (!data.ok) {
+    throw new Error(data.error || "주소 변환에 실패했습니다.");
+  }
+
+  return {
+    jibun: data.jibunAddress || "",
+    road: data.roadAddress || "",
+  };
+}
+
 function buildStaticMapUrl(lng, lat) {
   const center = `${lng},${lat}`;
   const marker = `type:d|size:mid|pos:${lng} ${lat}`;
   const params = new URLSearchParams({
     center,
-    level: "16",
+    level: "14",
     w: "1080",
     h: "720",
     maptype: "basic",
@@ -412,13 +449,15 @@ function drawProofCanvas(ctx, canvas, data) {
   ctx.fillText("좌표 정보", 76, 980);
 
   const rows = [
-    ["선택 방식", data.sourceType],
-    ["위도", Number(data.lat).toFixed(6)],
-    ["경도", Number(data.lng).toFixed(6)],
-    ["정확도(m)", data.accuracy == null ? "-" : Number(data.accuracy).toFixed(1)],
-    ["측정 시각", data.timeText],
-    ["비고", data.memo || "-"],
-  ];
+  ["선택 방식", data.sourceType],
+  ["위도", Number(data.lat).toFixed(6)],
+  ["경도", Number(data.lng).toFixed(6)],
+  ["정확도(m)", data.accuracy == null ? "-" : Number(data.accuracy).toFixed(1)],
+  ["지번주소", data.jibunAddress || "-"],
+  ["도로명주소", data.roadAddress || "-"],
+  ["측정 시각", data.timeText],
+  ["비고", data.memo || "-"],
+];
 
   let y = 1038;
   rows.forEach(([label, value]) => {
