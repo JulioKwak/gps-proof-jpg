@@ -430,37 +430,32 @@ function buildStaticMapUrl(lng, lat) {
 function drawProofCanvas(ctx, canvas, data) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+  // 배경
   ctx.fillStyle = "#f8fafc";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  roundRect(ctx, 40, 30, canvas.width - 80, 110, 28, "#ffffff");
-  ctx.fillStyle = "#0f172a";
-  ctx.font = "bold 42px sans-serif";
-  ctx.fillText("위치 증빙 이미지", 80, 88);
-  ctx.fillStyle = "#64748b";
-  ctx.font = "26px sans-serif";
-  ctx.fillText("GPS Proof JPG", 80, 126);
+  // 지도: 제목 박스를 없애고 위로 올림
+  roundImage(ctx, data.mapImage, 40, 30, canvas.width - 80, 760, 32);
 
-  roundImage(ctx, data.mapImage, 40, 165, canvas.width - 80, 720, 32);
-
-  roundRect(ctx, 40, 920, canvas.width - 80, 390, 28, "#ffffff");
+  // 좌표 정보 박스: 더 넓게 확보
+  roundRect(ctx, 40, 820, canvas.width - 80, 470, 28, "#ffffff");
 
   ctx.fillStyle = "#0f172a";
   ctx.font = "bold 32px sans-serif";
-  ctx.fillText("좌표 정보", 76, 980);
+  ctx.fillText("좌표 정보", 76, 880);
 
   const rows = [
-  ["선택 방식", data.sourceType],
-  ["위도", Number(data.lat).toFixed(6)],
-  ["경도", Number(data.lng).toFixed(6)],
-  ["정확도(m)", data.accuracy == null ? "-" : Number(data.accuracy).toFixed(1)],
-  ["지번주소", data.jibunAddress || "-"],
-  ["도로명주소", data.roadAddress || "-"],
-  ["측정 시각", data.timeText],
-  ["비고", data.memo || "-"],
-];
+    ["선택 방식", data.sourceType],
+    ["위도", Number(data.lat).toFixed(6)],
+    ["경도", Number(data.lng).toFixed(6)],
+    ["정확도(m)", data.accuracy == null ? "-" : Number(data.accuracy).toFixed(1)],
+    ["지번주소", data.jibunAddress || "-"],
+    ["도로명주소", data.roadAddress || "-"],
+    ["측정 시각", data.timeText],
+    ["비고", data.memo || "-"],
+  ];
 
-  let y = 1038;
+  let y = 940;
   rows.forEach(([label, value]) => {
     ctx.fillStyle = "#64748b";
     ctx.font = "24px sans-serif";
@@ -468,8 +463,8 @@ function drawProofCanvas(ctx, canvas, data) {
 
     ctx.fillStyle = "#0f172a";
     ctx.font = "bold 24px sans-serif";
-    wrapText(ctx, value, 300, y, 700, 32);
-    y += 50;
+    wrapText(ctx, String(value || "-"), 300, y, 680, 32);
+    y += 52;
   });
 }
 
