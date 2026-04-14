@@ -536,23 +536,44 @@ input[type="range"] {
   gap: 10px;
 }
 
-.copy-field {
-  display: flex;
+
+.input-with-action {
+  position: relative;
+  width: 100%;
+}
+
+.input-with-action input[type="text"] {
+  width: 100%;
+  padding-right: 52px;
+}
+
+.input-action-btn {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 10px;
+  background: #eef2ff;
+  color: #4338ca;
+  font-size: 16px;
+  font-weight: 700;
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  padding: 0;
+  box-shadow: none;
+  cursor: pointer;
 }
 
-.copy-field input {
-  flex: 1;
-  min-width: 0;
+.input-action-btn:hover {
+  background: #e0e7ff;
 }
 
-.btn-copy {
-  flex: 0 0 auto;
-  min-width: 72px;
-  padding: 12px 14px;
-  border-radius: 14px;
-  white-space: nowrap;
+.input-action-btn:active {
+  transform: translateY(-50%);
 }
 
 /* responsive */
@@ -618,5 +639,17 @@ input[type="range"] {
   .btn-copy {
     min-width: 64px;
     padding: 11px 12px;
+  }
+
+    .input-with-action input[type="text"] {
+    padding-right: 48px;
+  }
+
+  .input-action-btn {
+    width: 32px;
+    height: 32px;
+    right: 8px;
+    border-radius: 9px;
+    font-size: 15px;
   }
 }
