@@ -438,7 +438,7 @@ function drawProofCanvas(ctx, canvas, data) {
   roundImage(ctx, data.mapImage, 40, 30, canvas.width - 80, 760, 32);
 
   // 좌표 정보 박스: 더 넓게 확보
-  roundRect(ctx, 40, 820, canvas.width - 80, 470, 28, "#ffffff");
+  roundRect(ctx, 40, 820, canvas.width - 80, 500, 28, "#ffffff");
 
   ctx.fillStyle = "#0f172a";
   ctx.font = "bold 32px sans-serif";
@@ -451,7 +451,7 @@ function drawProofCanvas(ctx, canvas, data) {
     ["정확도(m)", data.accuracy == null ? "-" : Number(data.accuracy).toFixed(1)],
     ["지번주소", data.jibunAddress || "-"],
     ["도로명주소", data.roadAddress || "-"],
-    ["측정 시각", data.timeText],
+    ["작업 시각", data.timeText],
     ["비고", data.memo || "-"],
   ];
 
@@ -464,7 +464,7 @@ function drawProofCanvas(ctx, canvas, data) {
     ctx.fillStyle = "#0f172a";
     ctx.font = "bold 24px sans-serif";
     wrapText(ctx, String(value || "-"), 300, y, 680, 32);
-    y += 52;
+    y += 46;
   });
 }
 
