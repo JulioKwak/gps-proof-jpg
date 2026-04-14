@@ -415,7 +415,7 @@ function buildStaticMapUrl(lng, lat) {
   const marker = `type:d|size:mid|pos:${lng} ${lat}`;
   const params = new URLSearchParams({
     center,
-    level: "12",
+    level: "18",
     w: "1080",
     h: "720",
     maptype: "basic",
